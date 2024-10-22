@@ -1,5 +1,11 @@
 import { defineConfig } from "@solidjs/start/config";
 import { internalIpV4 } from "internal-ip";
+import { dirname, resolve } from "node:path";
+
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // @ts-expect-error process is a nodejs global
 const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM);
@@ -13,6 +19,11 @@ export default defineConfig({
   ssr: false,
   server: { preset: "static" },
   vite: () => ({
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "./src"),
+      },
+    },
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
     // 1. tauri expects a fixed port, fail if that port is not available
     server: {

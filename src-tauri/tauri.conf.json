@@ -3,9 +3,9 @@
   "productName": "kronos",
   "identifier": "com.you.kronos",
   "build": {
-    "beforeDevCommand": "pnpm dev",
+    "beforeDevCommand": "bun dev",
     "devUrl": "http://localhost:3000",
-    "beforeBuildCommand": "pnpm build",
+    "beforeBuildCommand": "bun build",
     "frontendDist": "../.output/public"
   },
   "plugins": {},
@@ -38,3 +38,4 @@
     ]
   }
 }
+
