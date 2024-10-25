@@ -1,4 +1,3 @@
-
 use tauri_specta::Event;
 
 // demo command
@@ -26,7 +25,7 @@ pub fn run() {
 
     #[cfg(debug_assertions)]
     let devtools = tauri_plugin_devtools::init();
-    let mut builder = tauri::Builder::default();
+    let mut builder = tauri::Builder::default().plugin(tauri_plugin_store::Builder::new().build());
 
     let specta_builder = tauri_specta::Builder::<tauri::Wry>::new()
         .commands(tauri_specta::collect_commands![greet])
@@ -49,6 +48,7 @@ pub fn run() {
     builder
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
         .invoke_handler(specta_builder.invoke_handler())
         .setup(move |app| {
             specta_builder.mount_events(app);
@@ -67,4 +67,3 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-  

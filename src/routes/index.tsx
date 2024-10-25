@@ -12,11 +12,22 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { A } from "@solidjs/router";
-import { createSignal, For, JSX, onMount } from "solid-js";
+import { A, useNavigate } from "@solidjs/router";
+import { createEffect, createSignal, For, JSX, onMount } from "solid-js";
+import { getCurrentKronosphere } from "@/lib/file-system/kronospheres";
 
 export default function Page(props: { children: JSX.Element }) {
   const { children } = props;
+  const navigate = useNavigate();
+
+  onMount(async () => {
+    const currentKronosphere = await getCurrentKronosphere();
+    console.log("current kronosphere:", currentKronosphere);
+    // if (!currentKronosphere) {
+    //   navigate("/kronosphere");
+    // }
+  });
+
   return (
     <div>
       <SidebarProvider
@@ -41,7 +52,7 @@ export default function Page(props: { children: JSX.Element }) {
               </BreadcrumbList>
             </Breadcrumb>
           </header>
-          <div class="flex flex-1 flex-col gap-4 p-4">{props.children}</div>
+          <div class="flex flex-1 flex-col gap-4 p-4">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </div>

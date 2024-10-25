@@ -14,7 +14,23 @@
       {
         "title": "kronos",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "resizable": true,
+        "maximizable": true,
+        "minimizable": true,
+        "closable": true,
+        "decorations": true,
+        "transparent": false,
+        "alwaysOnTop": false,
+        "visible": true,
+        "theme": "Dark",
+        "titleBarStyle": "Overlay",
+        "userAgent": "Kronos App",
+        "focus": true,
+        "skipTaskbar": false,
+        "fullscreen": false,
+        "shadow": true,
+        "zoomHotkeysEnabled": true
       }
     ],
     "security": {
@@ -38,4 +54,3 @@
     ]
   }
 }
-
