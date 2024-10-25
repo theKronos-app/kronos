@@ -157,3 +157,11 @@
 ::-webkit-scrollbar-corner {
   display: none;
 }
+
+.editor-container {
+  /*reverts list style*/
+  ul,
+  ol {
+    list-style: revert;
+  }
+}
