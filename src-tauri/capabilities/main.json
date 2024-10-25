@@ -12,6 +12,16 @@
     "dialog:default",
     "store:default",
     "fs:default",
+    "core:path:default",
+    "fs:allow-exists",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        { "path": "/", "requireLiteralLeadingDot": false },
+        { "path": "/**", "requireLiteralLeadingDot": false },
+        { "path": "**/.*", "requireLiteralLeadingDot": false }
+      ]
+    },
     {
       "identifier": "fs:allow-appdata-read-recursive"
     },
@@ -50,4 +60,3 @@
     }
   ]
 }
-

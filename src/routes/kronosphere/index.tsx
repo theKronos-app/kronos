@@ -22,9 +22,9 @@ import {
   TextFieldInput,
   TextFieldLabel,
 } from "@/components/ui/text-field";
-import { createKronosphere } from "@/lib/file-system/kronospheres";
+import { createKronosphere, openExistingKronosphere } from "@/lib/file-system/kronospheres";
 import { toastService } from "@/components/toast";
-
+import { useNavigate } from "@solidjs/router";
 type Props = {};
 
 export default function Kronosphere(props: Props) {
@@ -32,6 +32,8 @@ export default function Kronosphere(props: Props) {
   const [value, setValue] = createSignal("");
   const [languageValue, setLanguageValue] = createSignal("en");
   const [kronosphereName, setKronosphereName] = createSignal(""); // State for the input value
+
+  const navigate = useNavigate();
 
   const [successMessage, setSuccessMessage] = createSignal<string | null>(null);
 
@@ -56,6 +58,7 @@ export default function Kronosphere(props: Props) {
           `Kronosphere "${kronosphere.name}" created successfully!`,
         );
         setError(null);
+        navigate("/");
       }
     } catch (error) {
       toastService.error({
@@ -64,6 +67,25 @@ export default function Kronosphere(props: Props) {
       });
       setError("Failed to create Kronosphere.");
       setSuccessMessage(null);
+    }
+  };
+
+  const handleOpenKronosphere = async () => {
+    try {
+      const kronosphere = await openExistingKronosphere();
+      if (kronosphere) {
+        toastService.success({
+          title: "Success",
+          description: `Kronosphere "${kronosphere.name}" opened successfully!`,
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      toastService.error({
+        title: "Error",
+        description: "Selected directory is not a valid Kronosphere.",
+      });
+      setError("Failed to open Kronosphere.");
     }
   };
 
@@ -108,19 +130,18 @@ export default function Kronosphere(props: Props) {
 
           <div class="relative">
             <Button
-              class="group w-full justify-between transition-colors hover:bg-primary/90"
+              class="group w-full  transition-colors hover:bg-primary/90"
               variant="default"
               onClick={handleCreateKronosphere}
             >
               Create new Kronosphere
-              <ChevronDown class="h-4 w-4 transition-transform group-hover:rotate-180" />
             </Button>
             <p class="mt-1 text-xs text-muted-foreground">
               Create a new Kronosphere under a folder.
             </p>
           </div>
 
-          <Select
+          {/* <Select
             value={value()}
             onChange={setValue}
             options={["Test"]}
@@ -135,15 +156,15 @@ export default function Kronosphere(props: Props) {
               </SelectValue>
             </SelectTrigger>
             <SelectContent />
-          </Select>
+          </Select> */}
 
           <div class="relative">
             <Button
-              class="group w-full justify-between transition-colors hover:bg-secondary/90"
+              class="group w-full  transition-colors hover:bg-secondary/90"
               variant="secondary"
+              onClick={handleOpenKronosphere}
             >
               Open folder as Kronosphere
-              <ChevronDown class="h-4 w-4 transition-transform group-hover:rotate-180" />
             </Button>
             <p class="mt-1 text-xs text-muted-foreground">
               Choose an existing folder of Markdown files.
@@ -151,8 +172,7 @@ export default function Kronosphere(props: Props) {
           </div>
         </div>
 
-        {error() && <p class="text-red-500">{error()}</p>}
-        {successMessage() && <p class="text-green-500">{successMessage()}</p>}
+
       </div>
     </div>
   );

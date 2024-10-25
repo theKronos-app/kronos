@@ -23,6 +23,7 @@
     "@tauri-apps/plugin-store": "~2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "lexical-solid": "^0.12.1",
     "lucide-solid": "^0.453.0",
     "solid-js": "^1.8.19",
     "solid-sonner": "^0.2.8",

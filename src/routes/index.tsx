@@ -23,9 +23,9 @@ export default function Page(props: { children: JSX.Element }) {
   onMount(async () => {
     const currentKronosphere = await getCurrentKronosphere();
     console.log("current kronosphere:", currentKronosphere);
-    // if (!currentKronosphere) {
-    //   navigate("/kronosphere");
-    // }
+    if (!currentKronosphere) {
+      navigate("/kronosphere");
+    }
   });
 
   return (
