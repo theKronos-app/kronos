@@ -6,7 +6,7 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-  const IconPhHourglass: (typeof import("~icons/ph/hourglass.jsx"))["default"];
-  const IconPhHourglassMedium: (typeof import("~icons/ph/hourglass-medium.jsx"))["default"];
-  const IconPhHouse: (typeof import("~icons/ph/house.jsx"))["default"];
+  const IconPhHourglass: (typeof import("~icons/ph/hourglass.jsx"))["default"]
+  const IconPhHourglassMedium: (typeof import("~icons/ph/hourglass-medium.jsx"))["default"]
+  const IconPhHouse: (typeof import("~icons/ph/house.jsx"))["default"]
 }
