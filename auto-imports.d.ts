@@ -6,7 +6,18 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-  const IconPhHourglass: (typeof import("~icons/ph/hourglass.jsx"))["default"]
-  const IconPhHourglassMedium: (typeof import("~icons/ph/hourglass-medium.jsx"))["default"]
-  const IconPhHouse: (typeof import("~icons/ph/house.jsx"))["default"]
+  const IconPhCalendarDots: typeof import('~icons/ph/calendar-dots.jsx')['default']
+  const IconPhHourglass: typeof import("~icons/ph/hourglass.jsx")["default"]
+  const IconPhHourglassMedium: typeof import('~icons/ph/hourglass-medium.jsx')['default']
+  const IconPhHouse: typeof import('~icons/ph/house.jsx')['default']
+  const IconPhKanban: typeof import('~icons/ph/kanban.jsx')['default']
+  const IconPhListChecks: typeof import('~icons/ph/list-checks.jsx')['default']
+  const IconPhNoteBook: typeof import("~icons/ph/note-book.jsx")["default"]
+  const IconPhNotebook: typeof import('~icons/ph/notebook.jsx')['default']
+  const IconPhSidebar: typeof import('~icons/ph/sidebar.jsx')['default']
+  const IconPhSidebarSimple: typeof import('~icons/ph/sidebar-simple.jsx')['default']
+  const app: typeof import('./src/app')['default']
+  const commands: typeof import('./src/bindings')['commands']
+  const entryServer: typeof import('./src/entry-server')['default']
+  const events: typeof import('./src/bindings')['events']
 }

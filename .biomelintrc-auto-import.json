@@ -1,5 +1,17 @@
 {
   "javascript": {
-    "globals": []
+    "globals": [
+      "IconPhCalendarDots",
+      "IconPhHourglassMedium",
+      "IconPhKanban",
+      "IconPhListChecks",
+      "IconPhNotebook",
+      "IconPhSidebar",
+      "IconPhSidebarSimple",
+      "app",
+      "commands",
+      "entryServer",
+      "events"
+    ]
   }
 }

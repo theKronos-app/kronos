@@ -24,7 +24,7 @@ export default defineConfig({
 	vite: () => ({
 		plugins: [
 			AutoImport({
-				dts: true,
+				dts: "./auto-imports.d.ts",
 				resolvers: [
 					IconsResolver({
 						prefix: "Icon",
@@ -33,12 +33,15 @@ export default defineConfig({
 					}),
 				],
 
+				dirs: ["./src"],
+
 				biomelintrc: {
 					enabled: true, // Default `false`
 					filepath: "./.biomelintrc-auto-import.json", // Default `./.biomelintrc-auto-import.json`
 				},
 			}),
 			Icons({
+				defaultClass: "inline-block ",
 				compiler: "solid",
 			}),
 		],
