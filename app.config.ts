@@ -23,7 +23,10 @@ export default defineConfig({
 	server: { preset: "static" },
 	vite: () => ({
 		plugins: [
-			AutoImport({
+			VinxiAutoImport({
+				include: [
+					/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+				],
 				dts: "./auto-imports.d.ts",
 				resolvers: [
 					IconsResolver({
@@ -32,8 +35,7 @@ export default defineConfig({
 						enabledCollections: ["ph"],
 					}),
 				],
-
-				dirs: ["./src"],
+				imports: ["solid-js", "@solidjs/router"],
 
 				biomelintrc: {
 					enabled: true, // Default `false`
@@ -73,3 +75,17 @@ export default defineConfig({
 		envPrefix: ["VITE_", "TAURI_"],
 	}),
 });
+
+// https://github.com/solidjs/solid-start/issues/1374#issuecomment-2162667748
+const VinxiAutoImport = (options) => {
+	const autoimport = AutoImport(options);
+	return {
+		...autoimport,
+		transform(src, id) {
+			if (id.startsWith("/")) {
+				id = new URL(`file://${id}`).pathname;
+			}
+			return autoimport.transform(src, id);
+		},
+	};
+};

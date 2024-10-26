@@ -24,6 +24,7 @@ import { getCurrentKronosphere } from "@/lib/file-system/kronospheres";
 function Layout(props: { children: JSX.Element }) {
 	const { children } = props;
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	onMount(async () => {
 		const currentKronosphere = await getCurrentKronosphere();
@@ -33,35 +34,42 @@ function Layout(props: { children: JSX.Element }) {
 		}
 	});
 
-	return (
-		<div>
-			<SidebarProvider
-				style={
-					{
-						"--sidebar-width": "350px",
-					} as JSX.CSSProperties
-				}
-			>
-				<AppSidebar />
-				<SidebarInset>
-					<header class="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-2.5">
-						<SidebarTrigger class="-ml-1" />
-						<Separator orientation="vertical" class="mr-2 h-4" />
-						<Breadcrumb>
-							<BreadcrumbList>
-								<BreadcrumbItem class="hidden md:block">
-									<BreadcrumbLink href="#">Home</BreadcrumbLink>
-								</BreadcrumbItem>
-								<BreadcrumbSeparator class="hidden md:block" />
-								<BreadcrumbItem>Journal</BreadcrumbItem>
-							</BreadcrumbList>
-						</Breadcrumb>
-					</header>
-					<div class="flex flex-1 flex-col gap-4 p-4">{children}</div>
-				</SidebarInset>
-			</SidebarProvider>
-		</div>
-	);
+	return createMemo(() => {
+		// This will now reactively update when location changes
+		if (location.pathname === "/kronosphere") {
+			return <Suspense>{children}</Suspense>;
+		}
+
+		return (
+			<div>
+				<SidebarProvider
+					style={
+						{
+							"--sidebar-width": "350px",
+						} as JSX.CSSProperties
+					}
+				>
+					<AppSidebar />
+					<SidebarInset>
+						<header class="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-2.5">
+							<SidebarTrigger class="-ml-1" />
+							<Separator orientation="vertical" class="mr-2 h-4" />
+							<Breadcrumb>
+								<BreadcrumbList>
+									<BreadcrumbItem class="hidden md:block">
+										<BreadcrumbLink href="#">Home</BreadcrumbLink>
+									</BreadcrumbItem>
+									<BreadcrumbSeparator class="hidden md:block" />
+									<BreadcrumbItem>Journal</BreadcrumbItem>
+								</BreadcrumbList>
+							</Breadcrumb>
+						</header>
+						<div class="flex flex-1 flex-col gap-4 p-4">{children}</div>
+					</SidebarInset>
+				</SidebarProvider>
+			</div>
+		);
+	}) as unknown as JSX.Element;
 }
 
 export default function App() {
