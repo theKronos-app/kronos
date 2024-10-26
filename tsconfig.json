@@ -24,7 +24,9 @@
     "noFallthroughCasesInSwitch": true,
 
     "jsx": "preserve",
-    "jsxImportSource": "solid-js"
+    "jsxImportSource": "solid-js",
+
+    "types": ["unplugin-icons/types/solid"]
   },
   "include": ["src", "tests"],
   "references": [{ "path": "./tsconfig.node.json" }]

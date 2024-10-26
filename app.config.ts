@@ -1,6 +1,9 @@
 import { defineConfig } from "@solidjs/start/config";
 import { internalIpV4 } from "internal-ip";
 import { dirname, resolve } from "node:path";
+import Icons from "unplugin-icons/vite";
+import IconsResolver from "unplugin-icons/resolver";
+import AutoImport from "unplugin-auto-import/vite";
 
 import { fileURLToPath } from "node:url";
 
@@ -19,6 +22,27 @@ export default defineConfig({
   ssr: false,
   server: { preset: "static" },
   vite: () => ({
+    plugins: [
+      AutoImport({
+        dts: true,
+        resolvers: [
+          IconsResolver({
+            prefix: "Icon",
+            extension: "jsx",
+            enabledCollections: ["ph"],
+          }),
+        ],
+
+        eslintrc: {
+          enabled: true, // Default `false`
+          filepath: "./.eslintrc-auto-import.json",
+          globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+        },
+      }),
+      Icons({
+        compiler: "solid",
+      }),
+    ],
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),

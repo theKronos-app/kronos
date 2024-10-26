@@ -1,5 +1,5 @@
 import { Component, For, createSignal } from "solid-js";
-import { Calendar1, Hourglass, Kanban, ListTodo, Notebook } from "lucide-solid";
+import { Calendar1, Hourglass, Kanban, ListTodo } from "lucide-solid";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,7 @@ import {
   useSidebar,
 } from "./ui/sidebar";
 import { Dynamic } from "solid-js/web";
+
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
@@ -28,7 +29,7 @@ const data = {
     {
       title: "Journal",
       url: "#",
-      icon: Notebook,
+      icon: IconPhHouse,
       isActive: true,
     },
     {
@@ -88,7 +89,10 @@ export const AppSidebar: Component<SidebarProps> = (props) => {
                 size="lg"
                 class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground md:h-8 md:p-0"
               >
-                <Hourglass class="size-4" />
+                <IconPhHourglassMedium
+                  class="size-4"
+                  style={{ "--icon-size": "1.5rem" }}
+                />
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

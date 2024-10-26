@@ -53,6 +53,7 @@
     "vinxi": "^0.4.0"
   },
   "devDependencies": {
+    "@iconify-json/ph": "^1.2.1",
     "@tauri-apps/cli": "^2",
     "autoprefixer": "^10.4.20",
     "internal-ip": "^7.0.0",
@@ -60,6 +61,8 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "typescript": "^5.5.4",
+    "unplugin-auto-import": "^0.18.3",
+    "unplugin-icons": "^0.19.3",
     "vite": "^5.3.5",
     "vite-plugin-solid": "^2.10.2"
   }
