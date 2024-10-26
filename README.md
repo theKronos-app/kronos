@@ -1,18 +1,41 @@
-
 # Kronos
 
-Kronos is an open-source note-taking and task management application designed to combine the best features of existing tools while providing a more opinionated and structured approach. It aims to reduce distractions and offer a gentle learning curve for users seeking an efficient personal knowledge management system.
+Kronos is a zero-friction, local-first note-taking application that prioritizes quick capture and simple organization. No complicated setups. No overwhelming features. Just fast, reliable note-taking.
 
-## Features
+## Core Principles
 
-- **Journal Functionality**: Easily maintain a digital journal for your thoughts and reflections.
-- **Task Management**: Organize and track your tasks efficiently.
-- **Calendar Integration**: Seamlessly integrate with your existing calendar for better time management.
-- **AI-Powered Scheduling**: Leverage AI to optimize your schedule and study plans.
-- **Privacy-Focused**: Your data stays on your device, ensuring maximum privacy and security.
-- **Open Source**: Benefit from community contributions and customize the app to your needs.
+- **Zero Friction**: Capture thoughts instantly without decision paralysis
+- **Local First**: Your notes stay on your device, in plain markdown
+- **Simple > Complex**: Thoughtfully limited features to reduce cognitive load
 
-**Note:** All features mentioned above are currently work in progress and under active development.
+## Current Features (MVP)
+
+- **Instant Capture**: System-wide hotkey for immediate note-taking
+- **Daily Notes**: Automatic daily journaling with minimal interaction
+- **Simple Organization**: Tag-based organization without complex hierarchies
+- **Fast Search**: Quick access to your notes
+- **Privacy-Focused**: Local-first architecture, no account required
+
+## Technical Details
+
+- Built with solidStart and Tauri V2
+- Plain markdown files with YAML frontmatter
+- Real-time file system synchronization
+- No internet connection required
+
+## Project Status
+
+Kronos is currently in active development, focusing on perfecting core note-taking functionality. The current phase prioritizes:
+
+- Lightning-fast capture
+- Reliable file management
+- Minimal, focused interface
+
+## Future Development
+
+While we have ambitious plans for Kronos's future, we're committed to maintaining our zero-friction principle. Future features will only be added if they don't compromise the core experience.
+
+See [roadmap](https://github.com/theKronos-app/kronos/wiki) for planned developments.
 
 ## License
 
@@ -23,5 +46,3 @@ This project is licensed under the AGPL License - see the [LICENSE](LICENSE) fil
 Omar S. Goubail - [@OgAreMaInitials](https://x.com/OgAreMaInitials) - <omars.goubail@goubail.com>
 
 Project Link: <https://github.com/theKronos-app/kronos-app>
-
-Kronos is still in active development. We appreciate your interest and patience as we work to create a powerful, user-friendly personal knowledge management tool.
