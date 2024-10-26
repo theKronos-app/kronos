@@ -16,6 +16,7 @@ import { Dynamic } from "solid-js/web";
 
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import NavUser from "./nav-user";
 
 // This is sample data
 const data = {
@@ -128,7 +129,9 @@ export const AppSidebar: Component<SidebarProps> = (props) => {
 						</SidebarGroupContent>
 					</SidebarGroup>
 				</SidebarContent>
-				<SidebarFooter>{/* <NavUser user={data.user} /> */}</SidebarFooter>
+				<SidebarFooter>
+					<NavUser />
+				</SidebarFooter>
 			</Sidebar>
 
 			{/* Second sidebar */}

@@ -2,12 +2,16 @@
   "javascript": {
     "globals": [
       "IconPhCalendarDots",
+      "IconPhCaretUpDown",
+      "IconPhGear",
       "IconPhHourglassMedium",
       "IconPhKanban",
       "IconPhListChecks",
       "IconPhNotebook",
       "IconPhSidebar",
       "IconPhSidebarSimple",
+      "IconPhSparkle",
+      "IconPhSphere",
       "app",
       "commands",
       "entryServer",

@@ -26,11 +26,11 @@ function Layout(props: { children: JSX.Element }) {
 	const navigate = useNavigate();
 
 	onMount(async () => {
-		// const currentKronosphere = await getCurrentKronosphere();
-		// console.log("current kronosphere:", currentKronosphere);
-		// if (!currentKronosphere) {
-		//   navigate("/kronosphere");
-		// }
+		const currentKronosphere = await getCurrentKronosphere();
+		console.log("current kronosphere:", currentKronosphere);
+		if (!currentKronosphere) {
+			navigate("/kronosphere");
+		}
 	});
 
 	return (

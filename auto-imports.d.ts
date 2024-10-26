@@ -7,6 +7,8 @@
 export {}
 declare global {
   const IconPhCalendarDots: typeof import('~icons/ph/calendar-dots.jsx')['default']
+  const IconPhCaretUpDown: typeof import('~icons/ph/caret-up-down.jsx')['default']
+  const IconPhGear: typeof import('~icons/ph/gear.jsx')['default']
   const IconPhHourglass: typeof import("~icons/ph/hourglass.jsx")["default"]
   const IconPhHourglassMedium: typeof import('~icons/ph/hourglass-medium.jsx')['default']
   const IconPhHouse: typeof import('~icons/ph/house.jsx')['default']
@@ -16,6 +18,8 @@ declare global {
   const IconPhNotebook: typeof import('~icons/ph/notebook.jsx')['default']
   const IconPhSidebar: typeof import('~icons/ph/sidebar.jsx')['default']
   const IconPhSidebarSimple: typeof import('~icons/ph/sidebar-simple.jsx')['default']
+  const IconPhSparkle: typeof import('~icons/ph/sparkle.jsx')['default']
+  const IconPhSphere: typeof import('~icons/ph/sphere.jsx')['default']
   const app: typeof import('./src/app')['default']
   const commands: typeof import('./src/bindings')['commands']
   const entryServer: typeof import('./src/entry-server')['default']
