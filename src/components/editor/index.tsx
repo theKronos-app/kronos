@@ -31,7 +31,7 @@ import lexicalTheme from "./theme";
 function Placeholder() {
   return (
     <div class="pointer-events-none absolute left-[10px] top-[15px] select-none">
-      Enter some plain text...
+      What's on your mind?
     </div>
   );
 }
@@ -84,7 +84,7 @@ export default function Editor() {
           <div class="relative">
             <RichTextPlugin
               contentEditable={
-                <ContentEditable class="h-screen w-full resize-none overflow-hidden text-ellipsis  border-2 border-black px-2.5 py-[15px] outline-none" />
+                <ContentEditable class="h-screen w-full resize-none overflow-hidden text-ellipsis   px-2.5 py-[15px] outline-none" />
               }
               placeholder={<Placeholder />}
               errorBoundary={LexicalErrorBoundary}

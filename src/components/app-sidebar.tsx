@@ -52,9 +52,8 @@ const data = {
   ],
   mails: [
     {
-      name: "Shady Boukhary",
-      date: "Today",
-      subject: "Meeting with Jane",
+      name: "July 12, 2023",
+      subject: "Etc...",
       teaser:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem, temporibus.",
     },
