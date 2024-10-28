@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@ark-ui/solid": "^4.3.0",
     "@kobalte/core": "^0.13.7",
     "@lexical/clipboard": "0.18.0",
     "@lexical/code": "0.18.0",

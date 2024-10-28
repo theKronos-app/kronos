@@ -5,78 +5,70 @@ import { Toaster } from "@/components/ui/sonner";
 import "./styles.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { A, useNavigate } from "@solidjs/router";
-import { createEffect, createSignal, For, type JSX, onMount } from "solid-js";
+import { type JSX, onMount } from "solid-js";
 import { getCurrentKronosphere } from "@/lib/file-system/kronospheres";
+import Header from "./components/header";
 
 function Layout(props: { children: JSX.Element }) {
-	const { children } = props;
-	const navigate = useNavigate();
-	const location = useLocation();
+  const { children } = props;
+  const navigate = useNavigate();
+  const location = useLocation();
 
-	onMount(async () => {
-		const currentKronosphere = await getCurrentKronosphere();
-		console.log("current kronosphere:", currentKronosphere);
-		if (!currentKronosphere) {
-			navigate("/kronosphere");
-		}
-	});
+  createEffect(() => {
+    console.log("location", location.pathname);
+  });
 
-	return createMemo(() => {
-		// This will now reactively update when location changes
-		if (location.pathname === "/kronosphere") {
-			return <Suspense>{children}</Suspense>;
-		}
+  onMount(async () => {
+    const currentKronosphere = await getCurrentKronosphere();
+    if (!currentKronosphere) {
+      navigate("/kronosphere");
+    }
+  });
 
-		return (
-			<div>
-				<SidebarProvider
-					style={
-						{
-							"--sidebar-width": "350px",
-						} as JSX.CSSProperties
-					}
-				>
-					<AppSidebar />
-					<SidebarInset>
-						<header class="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-2.5">
-							<SidebarTrigger class="-ml-1" />
-							<Separator orientation="vertical" class="mr-2 h-4" />
-							<Breadcrumb>
-								<BreadcrumbList>
-									<BreadcrumbItem class="hidden md:block">
-										<BreadcrumbLink href="#">Home</BreadcrumbLink>
-									</BreadcrumbItem>
-									<BreadcrumbSeparator class="hidden md:block" />
-									<BreadcrumbItem>Journal</BreadcrumbItem>
-								</BreadcrumbList>
-							</Breadcrumb>
-						</header>
-						<div class="flex flex-1 flex-col gap-4 p-4">{children}</div>
-					</SidebarInset>
-				</SidebarProvider>
-			</div>
-		);
-	}) as unknown as JSX.Element;
+  return (
+    <Show
+      when={location.pathname === "/kronosphere"}
+      fallback={
+        <div>
+          <SidebarProvider
+            style={
+              {
+                "--sidebar-width": "350px",
+              } as JSX.CSSProperties
+            }
+          >
+            <AppSidebar />
+            <SidebarInset>
+              <Header />
+              <div class="flex flex-1 flex-col gap-4 p-4">{children}</div>
+            </SidebarInset>
+          </SidebarProvider>
+        </div>
+      }
+    >
+      <Suspense>{children}</Suspense>
+    </Show>
+  );
 }
 
 export default function App() {
-	return (
-		<Router root={(props) => <Layout>{props.children} </Layout>}>
-			<FileRoutes />
-			<Toaster position="top-right" expand={true} richColors closeButton />
-		</Router>
-	);
+  return (
+    <Router root={(props) => <Layout>{props.children} </Layout>}>
+      <FileRoutes />
+      <Toaster position="top-right" expand={true} richColors closeButton />
+    </Router>
+  );
 }
