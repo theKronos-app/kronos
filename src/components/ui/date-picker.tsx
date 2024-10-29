@@ -15,7 +15,7 @@ import type {
 import { DatePicker as DatePickerPrimitive } from "@ark-ui/solid";
 import type { VoidProps } from "solid-js";
 import { splitProps } from "solid-js";
-import { buttonVariants } from "./button";
+import { Button, buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
 export const DatePickerLabel = DatePickerPrimitive.Label;
@@ -235,9 +235,34 @@ export const DatePickerContent = (props: DatePickerContentProps) => {
   );
 };
 
-export const DatePickerInput = (props: DatePickerInputProps) => {
-  const [local, rest] = splitProps(props, ["class", "children"]);
+type DatePickerInputProps = {
+  variant?: "default" | "icon";
+  class?: string;
+  children?: any;
+  [key: string]: any;
+};
 
+export const DatePickerInput = (props: DatePickerInputProps) => {
+  const [local, rest] = splitProps(props, ["class", "children", "variant"]);
+
+  // If variant is icon, return just the button
+  if (local.variant === "icon") {
+    return (
+      <DatePickerPrimitive.Control>
+        <DatePickerPrimitive.Trigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            class={cn(" focus-visible:ring-[0.5px]", local.class)}
+          >
+            <IconPhCalendarDots />
+          </Button>
+        </DatePickerPrimitive.Trigger>
+      </DatePickerPrimitive.Control>
+    );
+  }
+
+  // Default variant with full input
   return (
     <DatePickerPrimitive.Control class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
       <DatePickerPrimitive.Input
@@ -248,21 +273,7 @@ export const DatePickerInput = (props: DatePickerInputProps) => {
         {...rest}
       />
       <DatePickerPrimitive.Trigger class="transition-shadow focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="mx-1 h-4 w-4"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm12-4v4M8 3v4m-4 4h16m-9 4h1m0 0v3"
-          />
-          <title>Calendar</title>
-        </svg>
+        <IconPhCalendarDots />
       </DatePickerPrimitive.Trigger>
     </DatePickerPrimitive.Control>
   );

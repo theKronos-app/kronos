@@ -1,4 +1,3 @@
-import { Accessor, JSX, Setter, type Component } from "solid-js";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
 import {
@@ -6,6 +5,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { A } from "@solidjs/router";
 import {
@@ -25,17 +25,33 @@ import {
   DatePickerViewControl,
   DatePickerViewTrigger,
 } from "@/components/ui/date-picker";
+import { ValueChangeDetails } from "node_modules/@ark-ui/solid/dist/types/components/date-picker/date-picker";
+import { Accessor, JSX, Setter } from "solid-js";
+import { format } from "date-fns";
 
 // props: Component<HeaderProps>
 // type HeaderProps = {};
 
 export default function Header(): JSX.Element {
   const matchJournal = useMatch(() => "/journal");
-  const [date, setDate] = createSignal<string[]>([]);
 
-  createEffect(() => {
-    console.log(date());
-  });
+  const date = createSignal<string[]>([]);
+
+  const formatDate = () => {
+    const dateValue = date[0]();
+    if (dateValue && dateValue.length > 0 && dateValue[0]) {
+      try {
+        const parsedDate = new Date(dateValue[0]);
+        // Check if date is valid
+        if (!isNaN(parsedDate.getTime())) {
+          return format(parsedDate, "MMM do, yy");
+        }
+      } catch (error) {
+        console.error("Date parsing error:", error);
+      }
+    }
+    return "Select a date"; // Fallback text
+  };
 
   Boolean(matchJournal()?.path);
 
@@ -46,30 +62,58 @@ export default function Header(): JSX.Element {
         <Separator orientation="vertical" class="mr-2 h-4" />
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem class="hidden md:block">
+            {/* <BreadcrumbItem class="hidden md:block">
               <BreadcrumbLink href="/" as={A}>
                 <A href="/">Home</A>
               </BreadcrumbLink>
             </BreadcrumbItem>
+
+            <BreadcrumbSeparator /> */}
+
+            <BreadcrumbItem class="hidden md:block">
+              {Boolean(matchJournal()?.path) ? (
+                <span class=" font-medium text-muted-foreground">
+                  {formatDate()}
+                </span>
+              ) : null}
+            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      {/* TODO: add calendar here in the jounal section */}
       {Boolean(matchJournal()?.path) ? (
         <div>
-          <DatePickerDemo />
+          <DatePickerDemo date={date} />
         </div>
-      ) : (
-        <div>nothing</div>
-      )}
+      ) : null}
     </header>
   );
 }
 
-const DatePickerDemo = () => {
+type DatePickerDemoProps = {
+  date: [Accessor<string[]>, Setter<string[]>];
+};
+
+const DatePickerDemo = (props: DatePickerDemoProps) => {
+  const [date, setDate] = props.date;
+
+  const handleValueChange = (details: ValueChangeDetails<string[]>) => {
+    if (details.valueAsString && details.valueAsString.length > 0) {
+      setDate(details.valueAsString);
+    } else {
+      setDate([]);
+    }
+  };
+
   return (
-    <DatePicker>
-      <DatePickerInput placeholder="Pick a date" />
+    <DatePicker
+      value={date()}
+      onValueChange={handleValueChange}
+      selectionMode="single"
+      parseValue={(value) => {
+        return Array.isArray(value) ? value : [];
+      }}
+    >
+      <DatePickerInput variant="icon" />
       <Portal>
         <DatePickerContent>
           <DatePickerView view="day">
