@@ -1,10 +1,12 @@
+export type NoteType = "daily" | "weekly" | "document";
+
 export interface Note {
   id: string;
   content: string;
   metadata: {
     created: Date;
     modified: Date;
-    type: "daily" | "document";
+    type: NoteType;
     tags: string[];
     properties: {
       // Daily-specific
