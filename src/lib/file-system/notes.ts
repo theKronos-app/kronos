@@ -10,7 +10,7 @@ import { join } from "@tauri-apps/api/path";
 import type { Note } from "@/types/note";
 import { getCurrentKronosphere } from "./kronospheres";
 import YAML from "yaml";
-import { parse as parseDate, format as formatDate } from "date-fns";
+import { parse as parseDate, format as formatDate, format } from "date-fns";
 import { parseISO } from "date-fns";
 
 // Helper function to ensure journal directory structure exists
@@ -175,47 +175,6 @@ function generateFrontmatter(metadata: Note["metadata"]): string {
   return `---\n${YAML.stringify(frontmatter)}---\n`;
 }
 
-// Helper function to determine note paths based on type
-async function getNotePath(
-  type: "daily" | "weekly" | "document",
-  id?: string,
-): Promise<{ path: string; id: string }> {
-  const currentKronosphere = await getCurrentKronosphere();
-  if (!currentKronosphere) {
-    throw new Error("No active Kronosphere");
-  }
-
-  if (type === "daily" || type === "weekly") {
-    return getJournalEntryPath(type);
-  }
-
-  // For regular documents
-  const notesDir = await join(currentKronosphere.path, "notes");
-  if (!(await exists(notesDir))) {
-    await mkdir(notesDir, { recursive: true });
-  }
-
-  if (id) {
-    const path = await join(notesDir, `${id}.md`);
-    return { path, id };
-  }
-
-  // Generate new id for document
-  const title = id || "untitled";
-  const baseFilename = createValidFilename(title);
-  let filename = baseFilename;
-  let counter = 1;
-  let path = await join(notesDir, `${filename}.md`);
-
-  while (await exists(path)) {
-    filename = `${baseFilename}-${counter}`;
-    path = await join(notesDir, `${filename}.md`);
-    counter++;
-  }
-
-  return { path, id: filename };
-}
-
 // Helper function to determine the correct path based on note type
 async function getNotePathInfo(
   id: string,
@@ -227,10 +186,21 @@ async function getNotePathInfo(
   }
 
   switch (type) {
-    case "daily":
-    case "weekly":
-      return getJournalEntryPath(type);
-    default:
+    case "daily": {
+      const { dailyDir } = await ensureJournalDirectory(
+        currentKronosphere.path,
+      );
+      const path = await join(dailyDir, `${id}.md`);
+      return { path, id };
+    }
+    case "weekly": {
+      const { weeklyDir } = await ensureJournalDirectory(
+        currentKronosphere.path,
+      );
+      const path = await join(weeklyDir, `${id}.md`);
+      return { path, id };
+    }
+    default: {
       const notesDir = await join(currentKronosphere.path, "notes");
       if (!(await exists(notesDir))) {
         await mkdir(notesDir, { recursive: true });
@@ -240,6 +210,7 @@ async function getNotePathInfo(
       }
       const path = await join(notesDir, `${id}.md`);
       return { path, id };
+    }
   }
 }
 
@@ -247,30 +218,34 @@ async function getNotePathInfo(
 export async function createNote(
   content: string,
   type: "daily" | "weekly" | "document" = "document",
+  id?: string,
 ): Promise<Note> {
   const currentKronosphere = await getCurrentKronosphere();
   if (!currentKronosphere) {
     throw new Error("No active Kronosphere");
   }
 
-  // Get path based on type
-  const { path, id } = await getNotePath(type);
+  // Get path based on type and id
+  const pathInfo = await getNotePathInfo(
+    id || format(new Date(), "yyyy-MM-dd"),
+    type,
+  );
+  const { path } = pathInfo;
 
   const now = new Date();
-  const metadata: Note["metadata"] & { type: "daily" | "weekly" | "document" } =
-    {
-      created: now,
-      modified: now,
-      type,
-      tags: [],
-      properties: {},
-    };
+  const metadata: Note["metadata"] = {
+    created: now,
+    modified: now,
+    type,
+    tags: [],
+    properties: {},
+  };
 
   const fullContent = generateFrontmatter(metadata) + content;
   await writeTextFile(path, fullContent);
 
   return {
-    id,
+    id: pathInfo.id,
     content,
     metadata,
     path,
@@ -370,7 +345,6 @@ export async function deleteNote(
 }
 
 // List all notes in the current Kronosphere
-
 export async function listNotes(
   type: "daily" | "weekly" | "document" = "document",
 ): Promise<Note[]> {

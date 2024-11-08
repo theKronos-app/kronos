@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/date-picker";
 import { ValueChangeDetails } from "node_modules/@ark-ui/solid/dist/types/components/date-picker/date-picker";
 import { isToday } from "date-fns";
+import clsx from "clsx";
 
 type JournalCalendarProps = {
   value: string[];
@@ -65,11 +66,16 @@ const JournalCalendar = (props: JournalCalendarProps) => {
                               {(day) => (
                                 <DatePickerTableCell value={day()}>
                                   <DatePickerTableCellTrigger
-                                    class={
-                                      isToday(new Date(day().toString()))
-                                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                                        : ""
-                                    }
+                                    class={clsx(
+                                      // Base styles
+                                      "transition-colors",
+                                      // Today's date
+                                      isToday(new Date(day().toString())) &&
+                                        "bg-accent text-accent-foreground hover:bg-accent/90",
+                                      // Selected date
+                                      day().toString() === props.value[0] &&
+                                        "bg-primary text-primary-foreground hover:bg-primary/90",
+                                    )}
                                   >
                                     {day().day}
                                   </DatePickerTableCellTrigger>

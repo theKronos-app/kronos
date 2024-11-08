@@ -1,32 +1,33 @@
-import { type JSX, onMount } from "solid-js";
+import { type JSX, onMount, createEffect } from "solid-js";
 import Editor from "@/components/editor";
 import { format } from "date-fns";
 import { useJournal } from "@/composables/useJournal";
+import { journalStore } from "@/store/journal-store";
 
 export default function Journal(): JSX.Element {
-  const { currentEntry, setCurrentEntry, currentDate, loadEntry } =
-    useJournal();
+  const { currentEntry, setCurrentEntry, loadEntry } = useJournal();
+  const [isLoading, setIsLoading] = createSignal(true);
 
-  onMount(() => {
-    if (!currentEntry()) {
-      loadEntry(format(new Date(), "yyyy-MM-dd"));
+  // Initial load
+  onMount(async () => {
+    setIsLoading(true);
+    const today = format(new Date(), "yyyy-MM-dd");
+    await loadEntry(today);
+    setIsLoading(false);
+  });
+
+  // Watch for store changes
+  createEffect(async () => {
+    if (journalStore.currentDate) {
+      setIsLoading(true);
+      await loadEntry(journalStore.currentDate);
+      setIsLoading(false);
     }
   });
 
   return (
     <div class="h-full w-full p-4">
-      {/* <div class="flex items-center justify-between border-b p-4">
-        <h1 class="text-xl font-semibold">
-          Journal Entry - {format(new Date(currentDate()), "MMMM do, yyyy")}
-        </h1>
-        <button
-          class="rounded bg-primary px-4 py-2 text-primary-foreground"
-          onClick={() => loadEntry(format(new Date(), "yyyy-MM-dd"))}
-        >
-          Go to Today
-        </button>
-      </div> */}
-      {currentEntry() && currentEntry()?.id && (
+      {!isLoading() && currentEntry() && (
         <Editor
           noteId={currentEntry()!.id}
           type="daily"

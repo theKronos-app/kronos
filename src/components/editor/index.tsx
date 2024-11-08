@@ -120,7 +120,7 @@ export default function Editor(props: EditorProps) {
       try {
         const loadedNote = await readNote(props.noteId, props.type);
         setNote(loadedNote);
-        
+
         // If editor is already available, initialize it
         const editorInstance = editor();
         if (editorInstance && loadedNote.content) {
@@ -141,7 +141,11 @@ export default function Editor(props: EditorProps) {
           markdown = $convertToMarkdownString(DEFAULT_TRANSFORMERS);
         });
 
-        const updatedNote = await updateNote(props.noteId, markdown, props.type);
+        const updatedNote = await updateNote(
+          props.noteId,
+          markdown,
+          props.type,
+        );
         setNote(updatedNote);
         props.onSave?.(updatedNote);
       } catch (error) {

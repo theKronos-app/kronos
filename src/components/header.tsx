@@ -6,19 +6,25 @@ import { format } from "date-fns";
 import JournalCalendar from "./journal-calendar";
 import { journalStore, setJournalStore } from "@/store/journal-store";
 import { ValueChangeDetails } from "node_modules/@ark-ui/solid/dist/types/components/date-picker/date-picker";
+import { useJournal } from "@/composables/useJournal";
 
 // props: Component<HeaderProps>
 // type HeaderProps = {};
 
 export default function Header(): JSX.Element {
+  const { loadEntry } = useJournal();
   const matchJournal = useMatch(() => "/journal");
 
   const handleDateChange = (details: ValueChangeDetails<string[]>) => {
     if (details.valueAsString?.[0]) {
-      setJournalStore("currentDate", details.valueAsString[0]);
+      const newDate = details.valueAsString[0];
+      setJournalStore("currentDate", newDate);
+      if (matchJournal()) {
+        // Only load entry if we're on journal page
+        loadEntry(newDate);
+      }
     }
   };
-
   const formatDate = () => {
     try {
       const parsedDate = new Date(journalStore.currentDate);
