@@ -5,20 +5,12 @@ import { Toaster } from "@/components/ui/sonner";
 import "./styles.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
+  // SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { A, useNavigate } from "@solidjs/router";
-import { type JSX, onMount } from "solid-js";
+import { type JSX, onMount, ParentComponent } from "solid-js";
 import { getCurrentKronosphere } from "@/lib/file-system/kronospheres";
 import Header from "./components/header";
 
@@ -66,9 +58,48 @@ function Layout(props: { children: JSX.Element }) {
 
 export default function App() {
   return (
-    <Router root={(props) => <Layout>{props.children} </Layout>}>
-      <FileRoutes />
-      <Toaster position="top-right" expand={true} richColors closeButton />
-    </Router>
+    <ThemeProvider>
+      <Router root={(props) => <Layout>{props.children} </Layout>}>
+        <FileRoutes />
+        <Toaster position="top-right" expand={true} richColors closeButton />
+      </Router>
+    </ThemeProvider>
   );
 }
+
+type ThemeContextType = {
+  isDark: () => boolean;
+  toggleDark: () => void;
+};
+
+const ThemeContext = createContext<ThemeContextType>();
+
+export const ThemeProvider: ParentComponent = (props) => {
+  const [isDark, setIsDark] = createSignal(false);
+
+  const toggleDark = () => {
+    setIsDark(!isDark());
+    document.documentElement.classList.toggle("dark");
+  };
+
+  // Check system preference on mount
+  if (typeof window !== "undefined") {
+    const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDark(darkMode);
+    document.documentElement.classList.toggle("light", darkMode);
+  }
+
+  return (
+    <ThemeContext.Provider value={{ isDark, toggleDark }}>
+      {props.children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+};

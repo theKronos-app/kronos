@@ -151,6 +151,8 @@ export default function Editor(props: EditorProps) {
   }, 300);
 
   return (
+    // <div class="editor-container h-full w-full dark:bg-background dark:text-foreground">
+
     <div class="editor-container h-full w-full">
       <LexicalComposer
         initialConfig={{
