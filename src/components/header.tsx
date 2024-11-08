@@ -4,6 +4,8 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from "./ui/breadcrumb";
 import { JSX } from "solid-js";
 import { format } from "date-fns";
 import JournalCalendar from "./journal-calendar";
+import { journalStore, setJournalStore } from "@/store/journal-store";
+import { ValueChangeDetails } from "node_modules/@ark-ui/solid/dist/types/components/date-picker/date-picker";
 
 // props: Component<HeaderProps>
 // type HeaderProps = {};
@@ -11,25 +13,23 @@ import JournalCalendar from "./journal-calendar";
 export default function Header(): JSX.Element {
   const matchJournal = useMatch(() => "/journal");
 
-  const date = createSignal<string[]>([]);
-
-  const formatDate = () => {
-    const dateValue = date[0]();
-    if (dateValue && dateValue.length > 0 && dateValue[0]) {
-      try {
-        const parsedDate = new Date(dateValue[0]);
-        // Check if date is valid
-        if (!isNaN(parsedDate.getTime())) {
-          return format(parsedDate, "MMM do, yy");
-        }
-      } catch (error) {
-        console.error("Date parsing error:", error);
-      }
+  const handleDateChange = (details: ValueChangeDetails<string[]>) => {
+    if (details.valueAsString?.[0]) {
+      setJournalStore("currentDate", details.valueAsString[0]);
     }
-    return "Select a date"; // Fallback text
   };
 
-  Boolean(matchJournal()?.path);
+  const formatDate = () => {
+    try {
+      const parsedDate = new Date(journalStore.currentDate);
+      if (!isNaN(parsedDate.getTime())) {
+        return format(parsedDate, "MMM do, yy");
+      }
+    } catch (error) {
+      console.error("Date parsing error:", error);
+    }
+    return "Select a date";
+  };
 
   return (
     <header class="sticky top-0 z-10 flex shrink-0 justify-between gap-2  bg-background p-2.5">
@@ -58,7 +58,10 @@ export default function Header(): JSX.Element {
       </div>
       {Boolean(matchJournal()?.path) ? (
         <div>
-          <JournalCalendar date={date} />
+          <JournalCalendar
+            value={[journalStore.currentDate]}
+            onValueChange={handleDateChange}
+          />
         </div>
       ) : null}
     </header>

@@ -18,25 +18,16 @@ import {
 import { ValueChangeDetails } from "node_modules/@ark-ui/solid/dist/types/components/date-picker/date-picker";
 import { Accessor, JSX, Setter } from "solid-js";
 
-type DatePickerDemoProps = {
-  date: [Accessor<string[]>, Setter<string[]>];
+type JournalCalendarProps = {
+  value: string[];
+  onValueChange: (details: ValueChangeDetails<string[]>) => void;
 };
 
-const JournalCalendar = (props: DatePickerDemoProps) => {
-  const [date, setDate] = props.date;
-
-  const handleValueChange = (details: ValueChangeDetails<string[]>) => {
-    if (details.valueAsString && details.valueAsString.length > 0) {
-      setDate(details.valueAsString);
-    } else {
-      setDate([]);
-    }
-  };
-
+const JournalCalendar = (props: JournalCalendarProps) => {
   return (
     <DatePicker
-      value={date()}
-      onValueChange={handleValueChange}
+      value={props.value}
+      onValueChange={props.onValueChange}
       selectionMode="single"
       parseValue={(value) => {
         return Array.isArray(value) ? value : [];
