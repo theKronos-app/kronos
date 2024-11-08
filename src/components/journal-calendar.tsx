@@ -16,7 +16,7 @@ import {
   DatePickerViewTrigger,
 } from "@/components/ui/date-picker";
 import { ValueChangeDetails } from "node_modules/@ark-ui/solid/dist/types/components/date-picker/date-picker";
-import { Accessor, JSX, Setter } from "solid-js";
+import { isToday } from "date-fns";
 
 type JournalCalendarProps = {
   value: string[];
@@ -64,7 +64,13 @@ const JournalCalendar = (props: JournalCalendarProps) => {
                             <Index each={week()}>
                               {(day) => (
                                 <DatePickerTableCell value={day()}>
-                                  <DatePickerTableCellTrigger>
+                                  <DatePickerTableCellTrigger
+                                    class={
+                                      isToday(new Date(day().toString()))
+                                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                                        : ""
+                                    }
+                                  >
                                     {day().day}
                                   </DatePickerTableCellTrigger>
                                 </DatePickerTableCell>
