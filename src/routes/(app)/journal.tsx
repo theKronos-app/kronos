@@ -3,6 +3,7 @@ import Editor from "@/components/editor";
 import { format } from "date-fns";
 import { useJournal } from "@/composables/useJournal";
 import { journalStore } from "@/store/journal-store";
+import MetadataEditor from "@/components/metadata-editor";
 
 export default function Journal(): JSX.Element {
   const { currentEntry, setCurrentEntry, loadEntry } = useJournal();
@@ -26,13 +27,27 @@ export default function Journal(): JSX.Element {
   });
 
   return (
-    <div class="h-full w-full p-4">
+    <div class="h-full w-full">
       {!isLoading() && currentEntry() && (
-        <Editor
-          noteId={currentEntry()!.id}
-          type="daily"
-          onSave={(note) => setCurrentEntry(note)}
-        />
+        <>
+          <MetadataEditor
+            metadata={currentEntry()!.metadata}
+            onChange={(metadata) => {
+              const updatedNote = {
+                ...currentEntry()!,
+                metadata,
+              };
+              setCurrentEntry(updatedNote);
+            }}
+          />
+          <div class="p-4">
+            <Editor
+              noteId={currentEntry()!.id}
+              type="daily"
+              onSave={(note) => setCurrentEntry(note)}
+            />
+          </div>
+        </>
       )}
     </div>
   );

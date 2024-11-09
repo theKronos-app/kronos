@@ -289,6 +289,7 @@ export async function updateNote(
   id: string,
   content: string,
   type: "daily" | "weekly" | "document" = "document",
+  metadata?: Note["metadata"],
 ): Promise<Note> {
   const { path } = await getNotePathInfo(id, type);
 
@@ -311,8 +312,8 @@ export async function updateNote(
     };
   }
 
-  const metadata = {
-    ...existingNote.metadata,
+  const updatedMetadata = {
+    ...(metadata || existingNote.metadata),
     modified: new Date(),
   };
 

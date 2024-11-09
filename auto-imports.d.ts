@@ -26,6 +26,7 @@ declare global {
   const IconPhSidebarSimple: typeof import('~icons/ph/sidebar-simple.jsx')['default']
   const IconPhSparkle: typeof import('~icons/ph/sparkle.jsx')['default']
   const IconPhSphere: typeof import('~icons/ph/sphere.jsx')['default']
+  const IconPhX: typeof import('~icons/ph/x.jsx')['default']
   const Index: typeof import('solid-js')['Index']
   const Link: typeof import('@solidjs/router')['Link']
   const Match: typeof import('solid-js')['Match']

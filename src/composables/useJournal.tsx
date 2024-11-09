@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { createNote, readNote } from "@/lib/file-system/notes";
+import { createNote, readNote, updateNote } from "@/lib/file-system/notes";
 import type { Note } from "@/types/note";
 import { format } from "date-fns";
 import { toastService } from "@/components/toast";
@@ -78,6 +78,22 @@ export function useJournal() {
     }
   }
 
+  async function updateEntryMetadata(metadata: Note["metadata"]) {
+    if (!currentEntry()) return;
+
+    try {
+      const updated = await updateNote(
+        currentEntry()!.id,
+        currentEntry()!.content,
+        "daily",
+        metadata,
+      );
+      setCurrentEntry(updated);
+    } catch (error) {
+      console.error("Failed to update metadata:", error);
+      toastService.error({ description: "Failed to update metadata" });
+    }
+  }
   return {
     currentEntry,
     setCurrentEntry,
