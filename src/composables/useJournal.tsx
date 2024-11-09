@@ -47,7 +47,7 @@ export function useJournal() {
         console.log("Existing entry loaded:", entry);
       } else {
         console.log("No existing note found, creating new entry...");
-        const initialContent = `# Journal Entry - ${format(
+        const initialContent = `## Journal Entry - ${format(
           new Date(dateStr),
           "MMMM do, yyyy",
         )}\n\n`;
