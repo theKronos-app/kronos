@@ -1,4 +1,5 @@
 use tauri_specta::Event;
+use tauri_plugin_sql::{Builder, Migration, MigrationKind};
 
 // demo command
 #[tauri::command]
@@ -16,6 +17,20 @@ pub struct DemoEvent(String);
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+ // let's add the note and task migrations, AI! 
+    let migrations = vec![  
+        Migration {  
+            version: 1,  
+            description: "create users table",  
+            sql: "CREATE TABLE IF NOT EXISTS users (  
+                id INTEGER PRIMARY KEY AUTOINCREMENT,  
+                name TEXT NOT NULL,  
+                email TEXT  
+            )",  
+            kind: MigrationKind::Up,  
+        }  
+    ];  
+
     #[cfg(debug_assertions)]
     {
         log::info!("App started!");
@@ -26,7 +41,8 @@ pub fn run() {
     #[cfg(debug_assertions)]
     let devtools = tauri_plugin_devtools::init();
     let mut builder = tauri::Builder::default()
-        .plugin(tauri_plugin_sql::Builder::new().build())
+        .plugin(tauri_plugin_sql::Builder::default()
+                .add_migrations("sqlite:kronoshpere.db", migrations).build())
         .plugin(tauri_plugin_store::Builder::new().build());
 
     let specta_builder = tauri_specta::Builder::<tauri::Wry>::new()
