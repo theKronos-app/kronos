@@ -43,6 +43,36 @@ Individuals who are:
 
 ## Opinionated Design - "One Way to Do Things"
 
+- **Data Storage**: Utilizes a local SQLite database to store journal entries, notes, and tasks, ensuring data integrity and efficient querying.
+- **Structured Data**: Notes and tasks are stored in a structured format within the database, allowing for advanced features like filtering, sorting, and analysis.
+
+## Technical Overview
+
+### Architecture
+
+Kronos is built using a combination of web technologies (HTML, CSS, JavaScript/TypeScript) for the frontend and Rust for the backend. The core of the application's data management is a local SQLite database.
+
+### Database Schema
+
+The SQLite database is structured with the following tables:
+
+- **Notes**:
+  - `id` (TEXT, PRIMARY KEY): A unique identifier for each note.
+  - `content` (TEXT): The content of the note.
+  - `created_at` (INTEGER): Timestamp of when the note was created.
+  - `modified_at` (INTEGER): Timestamp of when the note was last modified.
+  - `type` (TEXT): The type of note (e.g., "daily", "weekly", "document").
+  - `tags` (TEXT): A comma-separated list of tags associated with the note.
+  - `properties` (JSON): A JSON object containing additional properties, such as mood (for daily notes) or status (for documents).
+  - `path` (TEXT): The path to the note in the virtual file system.
+
+- **Tasks** (Future):
+  - `id` (TEXT, PRIMARY KEY)
+  - `description` (TEXT)
+  - `due_date` (INTEGER)
+  - `priority` (INTEGER)
+  - `status` (TEXT)
+
 - **Clear Separation**: Journal entries are for daily flow; notes are for focused content within a day.
 - **Automatic Linking**: Notes are always linked to the day they are created or updated, providing inherent context.
 - **AI as Guide, Not Autopilot**: The AI offers suggestions and insights, but doesn't make decisions or alter your content without your explicit action.
