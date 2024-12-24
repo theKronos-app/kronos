@@ -25,7 +25,9 @@ pub fn run() {
 
     #[cfg(debug_assertions)]
     let devtools = tauri_plugin_devtools::init();
-    let mut builder = tauri::Builder::default().plugin(tauri_plugin_store::Builder::new().build());
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_sql::Builder::new().build())
+        .plugin(tauri_plugin_store::Builder::new().build());
 
     let specta_builder = tauri_specta::Builder::<tauri::Wry>::new()
         .commands(tauri_specta::collect_commands![greet])
