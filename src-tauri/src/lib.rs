@@ -17,19 +17,54 @@ pub struct DemoEvent(String);
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
- // let's add the note and task migrations, AI! 
-    let migrations = vec![  
-        Migration {  
-            version: 1,  
-            description: "create users table",  
-            sql: "CREATE TABLE IF NOT EXISTS users (  
-                id INTEGER PRIMARY KEY AUTOINCREMENT,  
-                name TEXT NOT NULL,  
-                email TEXT  
-            )",  
-            kind: MigrationKind::Up,  
-        }  
-    ];  
+    let migrations = vec![
+        Migration {
+            version: 1,
+            description: "create notes table",
+            sql: "CREATE TABLE IF NOT EXISTS notes (
+                id TEXT PRIMARY KEY,
+                content TEXT,
+                created_at INTEGER,
+                modified_at INTEGER,
+                type TEXT,
+                tags TEXT,
+                properties JSON
+            )",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 2,
+            description: "create tasks table",
+            sql: "CREATE TABLE IF NOT EXISTS tasks (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                notes TEXT,
+                is_done INTEGER,
+                created_at INTEGER,
+                done_at INTEGER,
+                journal_date TEXT NOT NULL,
+                tags TEXT,
+                priority INTEGER DEFAULT 0
+            )",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 3,
+            description: "add path column to notes table",
+            sql: "ALTER TABLE notes ADD COLUMN path TEXT",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 4,
+            description: "create users table",
+            sql: "CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT
+            )",
+            kind: MigrationKind::Up,
+        }
+    ];
 
     #[cfg(debug_assertions)]
     {
