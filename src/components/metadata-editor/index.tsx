@@ -13,27 +13,31 @@ interface MetadataEditorProps {
 
 export default function MetadataEditor(props: MetadataEditorProps) {
 	console.log(
-		"🚀 -> src/components/metadata-editor/index.tsx:14 -> props: ",
+		"🚀 -> src/components/metadata-editor/index.tsx:14 -> tags: ",
 		props.note.tags,
+	);
+	console.log(
+		"🚀 -> src/components/metadata-editor/index.tsx:15 -> properties: ",
+		props.note.properties,
 	);
 	const [tags, setTags] = createSignal(props.note?.tags || []);
 	const [newTag, setNewTag] = createSignal("");
 	const [properties, setProperties] = createSignal(() => {
 		// Ensure properties is always an object
 		if (!props.note.properties) return {};
-		
+
 		// If it's a string, try parsing it
-		if (typeof props.note.properties === 'string') {
+		if (typeof props.note.properties === "string") {
 			try {
 				return JSON.parse(props.note.properties);
 			} catch {
-				console.error('Failed to parse properties');
+				console.error("Failed to parse properties");
 				return {};
 			}
 		}
-		
+
 		// If it's already an object, return it
-		return props.note.properties;
+		return props.note.properties || {};
 	});
 	const [newPropertyKey, setNewPropertyKey] = createSignal("");
 	const [newPropertyValue, setNewPropertyValue] = createSignal("");
