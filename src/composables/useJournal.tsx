@@ -54,35 +54,48 @@ export function useJournal() {
 					properties: {},
 				};
 
-				// Parse tags from the stored JSON
+				// Robust properties parsing
 				try {
-					let parsedTags: string[] = [];
-
-					if (entry.tags) {
-						if (typeof entry.tags === "string") {
+					if (entry.properties) {
+						if (typeof entry.properties === 'string') {
 							try {
-								// First try parsing as a JSON object with tags
-								const parsedJson = JSON.parse(entry.tags);
-								parsedTags = Array.isArray(parsedJson.tags)
-									? parsedJson.tags
-									: parsedJson.tags
-										? [parsedJson.tags]
-										: [];
+								// Try parsing as JSON string
+								entry.properties = JSON.parse(entry.properties);
 							} catch {
-								// If that fails, try parsing as a JSON array
-								try {
-									parsedTags = JSON.parse(entry.tags);
-								} catch {
-									// If all else fails, split the string
-									parsedTags = entry.tags.split(",").map((tag) => tag.trim());
-								}
+								// If parsing fails, set to empty object
+								entry.properties = {};
+							}
+						}
+					} else {
+						entry.properties = {};
+					}
+				} catch (parseError) {
+					console.error("Failed to parse properties:", parseError);
+					entry.properties = {};
+				}
+
+				// Robust tags parsing
+				let parsedTags: string[] = [];
+				try {
+					if (entry.tags) {
+						if (typeof entry.tags === 'string') {
+							// Try parsing as JSON array or object
+							try {
+								const parsed = JSON.parse(entry.tags);
+								parsedTags = Array.isArray(parsed) 
+									? parsed 
+									: parsed.tags || [];
+							} catch {
+								// Fallback to comma-separated string
+								parsedTags = entry.tags.split(',')
+									.map(tag => tag.trim())
+									.filter(tag => tag);
 							}
 						} else if (Array.isArray(entry.tags)) {
 							parsedTags = entry.tags;
 						}
 					}
-
-					entry.tags = parsedTags.filter((tag) => tag && tag.trim() !== "");
+					entry.tags = parsedTags;
 				} catch (parseError) {
 					console.error("Failed to parse tags:", parseError);
 					entry.tags = [];
