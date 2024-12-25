@@ -32,6 +32,16 @@ export default function Journal(): JSX.Element {
 			<Show when={!isLoading()} fallback={<div>Loading...</div>}>
 				{currentEntry() ? (
 					<>
+						{/* <MetadataEditor */}
+						{/* 	metadata={currentEntry()!.metadata || {}} */}
+						{/* 	onChange={(metadata) => { */}
+						{/* 		const updatedNote = { */}
+						{/* 			...currentEntry()!, */}
+						{/* 			metadata, */}
+						{/* 		}; */}
+						{/* 		setCurrentEntry(updatedNote); */}
+						{/* 	}} */}
+						{/* /> */}
 						<MetadataEditor
 							metadata={currentEntry()!.metadata || {}}
 							onChange={(metadata) => {
@@ -41,6 +51,7 @@ export default function Journal(): JSX.Element {
 								};
 								setCurrentEntry(updatedNote);
 							}}
+							aiInsights={currentEntry()!.aiInsights}
 						/>
 						<div class="p-4">
 							<Editor
