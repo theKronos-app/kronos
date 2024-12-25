@@ -46,11 +46,10 @@ export default function Journal(): JSX.Element {
 						{/* /> */}
 						<div class="fixed top-20">
 							<MetadataEditor
-								metadata={currentEntry()!.metadata || {}}
-								onChange={(metadata) => {
-									updateEntryMetadata(metadata, currentEntry()!.aiInsights ?? null);
+								note={currentEntry()!}
+								onChange={(note) => {
+									updateEntryMetadata(note);
 								}}
-								aiInsights={currentEntry()!.aiInsights}
 							/>
 						</div>
 						<div class="flex-1"></div>

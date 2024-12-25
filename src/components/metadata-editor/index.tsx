@@ -7,18 +7,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 interface MetadataEditorProps {
-	metadata: Note["metadata"];
-	onChange: (metadata: Note["metadata"]) => void;
-	aiInsights?: string;
-	type?: Note["type"];  // Optional type prop
+	note: Note;
+	onChange: (note: Note) => void;
 }
 
 export default function MetadataEditor(props: MetadataEditorProps) {
-	const [tags, setTags] = createSignal(props.metadata?.properties?.tags || []);
-	const [newTag, setNewTag] = createSignal("");
-	const [properties, setProperties] = createSignal(
-		props.metadata?.properties || {},
+	console.log(
+		"🚀 -> src/components/metadata-editor/index.tsx:14 -> props: ",
+		props.note.tags,
 	);
+	const [tags, setTags] = createSignal(props.note?.tags || []);
+	const [newTag, setNewTag] = createSignal("");
+	const [properties, setProperties] = createSignal(() => {
+		// Ensure properties is always an object
+		if (!props.note.properties) return {};
+		
+		// If it's a string, try parsing it
+		if (typeof props.note.properties === 'string') {
+			try {
+				return JSON.parse(props.note.properties);
+			} catch {
+				console.error('Failed to parse properties');
+				return {};
+			}
+		}
+		
+		// If it's already an object, return it
+		return props.note.properties;
+	});
 	const [newPropertyKey, setNewPropertyKey] = createSignal("");
 	const [newPropertyValue, setNewPropertyValue] = createSignal("");
 	const [isAddingProperty, setIsAddingProperty] = createSignal(false);
@@ -29,11 +45,8 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 			const updatedTags = [...tags(), tagValue];
 			setTags(updatedTags);
 			props.onChange({
-				...props.metadata,
-				properties: {
-					...props.metadata.properties,
-					tags: updatedTags,
-				},
+				...props.note,
+				tags: updatedTags,
 			});
 			setNewTag("");
 		}
@@ -43,11 +56,8 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 		const updatedTags = tags().filter((tag) => tag !== tagToRemove);
 		setTags(updatedTags);
 		props.onChange({
-			...props.metadata,
-			properties: {
-				...props.metadata.properties,
-				tags: updatedTags,
-			},
+			...props.note,
+			tags: updatedTags,
 		});
 	};
 
@@ -58,7 +68,7 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 			const updatedProperties = { ...properties(), [key]: value };
 			setProperties(updatedProperties);
 			props.onChange({
-				...props.metadata,
+				...props.note,
 				properties: updatedProperties,
 			});
 			setNewPropertyKey("");
@@ -71,7 +81,7 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 		const { [key]: _, ...rest } = properties();
 		setProperties(rest);
 		props.onChange({
-			...props.metadata,
+			...props.note,
 			properties: rest,
 		});
 	};
@@ -87,7 +97,7 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 				</CardHeader>
 				<CardContent class="p-3 pt-0">
 					<span class="text-muted-foreground">
-						{format(props.metadata?.created || new Date(), "PPP")}
+						{format(props.note.id, "PPP")}
 					</span>
 				</CardContent>
 			</Card>
@@ -208,7 +218,7 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 				</CardContent>
 			</Card>
 
-			<Show when={props.aiInsights}>
+			<Show when={props.note.aiInsights}>
 				<Card class="bg-muted">
 					<CardHeader class="p-3">
 						<CardTitle class="text-sm font-medium flex items-center">
@@ -217,7 +227,7 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 						</CardTitle>
 					</CardHeader>
 					<CardContent class="p-3 pt-0">
-						<p class="text-xs text-muted-foreground">{props.aiInsights}</p>
+						<p class="text-xs text-muted-foreground">{props.note.aiInsights}</p>
 					</CardContent>
 				</Card>
 			</Show>

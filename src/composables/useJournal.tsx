@@ -34,6 +34,10 @@ export function useJournal() {
 				"SELECT * FROM notes WHERE id = $1 AND type = 'daily'",
 				[dateStr],
 			);
+			console.log(
+				"🚀 -> src/composables/useJournal.tsx:36 -> existingEntry: ",
+				existingEntry,
+			);
 
 			let entry: Note;
 
@@ -52,17 +56,36 @@ export function useJournal() {
 
 				// Parse tags from the stored JSON
 				try {
-					const storedTags =
-						typeof entry.tags === "string"
-							? JSON.parse(entry.tags)
-							: entry.tags;
+					let parsedTags: string[] = [];
 
-					// Extract tags from the parsed object
-					const parsedTags = Array.isArray(storedTags) ? storedTags : [];
-					entry.metadata.tags = parsedTags;
+					if (entry.tags) {
+						if (typeof entry.tags === "string") {
+							try {
+								// First try parsing as a JSON object with tags
+								const parsedJson = JSON.parse(entry.tags);
+								parsedTags = Array.isArray(parsedJson.tags)
+									? parsedJson.tags
+									: parsedJson.tags
+										? [parsedJson.tags]
+										: [];
+							} catch {
+								// If that fails, try parsing as a JSON array
+								try {
+									parsedTags = JSON.parse(entry.tags);
+								} catch {
+									// If all else fails, split the string
+									parsedTags = entry.tags.split(",").map((tag) => tag.trim());
+								}
+							}
+						} else if (Array.isArray(entry.tags)) {
+							parsedTags = entry.tags;
+						}
+					}
+
+					entry.tags = parsedTags.filter((tag) => tag && tag.trim() !== "");
 				} catch (parseError) {
 					console.error("Failed to parse tags:", parseError);
-					entry.metadata.tags = [];
+					entry.tags = [];
 				}
 			} else {
 				console.log("No existing note found, creating new entry...");
@@ -120,10 +143,7 @@ export function useJournal() {
 		}
 	}
 
-	async function updateEntryMetadata(
-		metadata: Note["metadata"],
-		aiInsights?: string | null,
-	) {
+	async function updateEntryMetadata(note: Note) {
 		if (!currentEntry()) return;
 
 		try {
@@ -134,9 +154,9 @@ export function useJournal() {
 				"UPDATE notes SET modified_at = $1, properties = $2, tags = $3, ai_insights = $4 WHERE id = $5",
 				[
 					now,
-					JSON.stringify(metadata.properties || {}),
-					JSON.stringify(metadata.tags || []),
-					aiInsights ?? null,
+					JSON.stringify(note.properties || {}),
+					JSON.stringify(note.tags || []),
+					note.aiInsights ?? null,
 					currentEntry()!.id,
 				],
 			);
@@ -147,22 +167,6 @@ export function useJournal() {
 			);
 
 			const updatedEntry = updatedEntryResult[0];
-
-			// Parse tags back into an array
-			if (updatedEntry) {
-				try {
-					// Check if tags is a JSON string or already an object
-					const parsedTags = updatedEntry.metadata.properties?.tags || [];
-					updatedEntry.metadata.properties = {
-						...updatedEntry.metadata.properties,
-						tags: Array.isArray(parsedTags) ? parsedTags : [],
-					};
-				} catch (parseError) {
-					console.error("Failed to parse tags:", parseError);
-					updatedEntry.metadata.tags = [];
-				}
-			}
-
 			setCurrentEntry(updatedEntry);
 		} catch (error) {
 			console.error("Failed to update metadata:", error);
