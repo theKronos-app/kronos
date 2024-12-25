@@ -34,10 +34,6 @@ export function useJournal() {
 				"SELECT * FROM notes WHERE id = $1 AND type = 'daily'",
 				[dateStr],
 			);
-			console.log(
-				"🚀 -> src/composables/useJournal.tsx:36 -> existingEntry: ",
-				existingEntry,
-			);
 
 			let entry: Note;
 
@@ -57,20 +53,40 @@ export function useJournal() {
 				// Robust properties parsing
 				try {
 					if (entry.properties) {
-						if (typeof entry.properties === 'string') {
+						// Handle string properties (from database)
+						if (typeof entry.properties === "string") {
 							try {
-								// Try parsing as JSON string
-								entry.properties = JSON.parse(entry.properties);
-							} catch {
-								// If parsing fails, set to empty object
+								// First, try parsing as a JSON string
+								let parsedProperties = JSON.parse(entry.properties);
+
+								// If it's still a string, parse again
+								if (typeof parsedProperties === "string") {
+									parsedProperties = JSON.parse(parsedProperties);
+								}
+
+								entry.properties = parsedProperties;
+							} catch (error) {
+								console.warn(
+									"Could not parse properties:",
+									entry.properties,
+									error,
+								);
 								entry.properties = {};
 							}
+						} else if (typeof entry.properties === "object") {
+							// If it's already an object, ensure it's valid
+							entry.properties = entry.properties || {};
+						} else {
+							entry.properties = {};
 						}
-					} else {
-						entry.properties = {};
 					}
 				} catch (parseError) {
-					console.error("Failed to parse properties:", parseError);
+					console.error("Comprehensive properties parsing failed:", parseError);
+					entry.properties = {};
+				}
+
+				// Ensure properties is always an object
+				if (entry.properties === null || entry.properties === undefined) {
 					entry.properties = {};
 				}
 
@@ -78,18 +94,17 @@ export function useJournal() {
 				let parsedTags: string[] = [];
 				try {
 					if (entry.tags) {
-						if (typeof entry.tags === 'string') {
+						if (typeof entry.tags === "string") {
 							// Try parsing as JSON array or object
 							try {
 								const parsed = JSON.parse(entry.tags);
-								parsedTags = Array.isArray(parsed) 
-									? parsed 
-									: parsed.tags || [];
+								parsedTags = Array.isArray(parsed) ? parsed : parsed.tags || [];
 							} catch {
 								// Fallback to comma-separated string
-								parsedTags = entry.tags.split(',')
-									.map(tag => tag.trim())
-									.filter(tag => tag);
+								parsedTags = entry.tags
+									.split(",")
+									.map((tag) => tag.trim())
+									.filter((tag) => tag);
 							}
 						} else if (Array.isArray(entry.tags)) {
 							parsedTags = entry.tags;
