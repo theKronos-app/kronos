@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import type { Note } from "@/types/note";
+import type { Note, NoteType } from "@/types/note";
 import { format } from "date-fns";
 import { toastService } from "@/components/toast";
 import { journalStore, setJournalStore } from "@/store/journal-store";
@@ -40,6 +40,30 @@ export function useJournal() {
 			if (existingEntry.length > 0) {
 				console.log("Found existing note, loading...");
 				entry = existingEntry[0];
+
+				// Ensure metadata exists and is initialized
+				entry.metadata = entry.metadata || {
+					created: new Date(),
+					modified: new Date(),
+					type: "daily" as NoteType,
+					tags: [],
+					properties: {},
+				};
+
+				// Parse tags from the stored JSON
+				try {
+					const storedTags =
+						typeof entry.tags === "string"
+							? JSON.parse(entry.tags)
+							: entry.tags;
+
+					// Extract tags from the parsed object
+					const parsedTags = Array.isArray(storedTags) ? storedTags : [];
+					entry.metadata.tags = parsedTags;
+				} catch (parseError) {
+					console.error("Failed to parse tags:", parseError);
+					entry.metadata.tags = [];
+				}
 			} else {
 				console.log("No existing note found, creating new entry...");
 				const initialContent = `## Journal Entry - ${format(
@@ -56,8 +80,8 @@ export function useJournal() {
 							initialContent,
 							now,
 							now,
-							"daily",
-							"",
+							"daily" as NoteType,
+							JSON.stringify([]), // Store as JSON string
 							JSON.stringify({}),
 						],
 					);
@@ -72,6 +96,15 @@ export function useJournal() {
 					[dateStr],
 				);
 				entry = newEntryResult[0];
+
+				// Ensure metadata is initialized for new entries
+				entry.metadata = {
+					created: new Date(now),
+					modified: new Date(now),
+					type: "daily" as NoteType,
+					tags: [],
+					properties: {},
+				};
 			}
 
 			// Update both the current entry and the store
@@ -87,7 +120,10 @@ export function useJournal() {
 		}
 	}
 
-	async function updateEntryMetadata(metadata: Note["metadata"]) {
+	async function updateEntryMetadata(
+		metadata: Note["metadata"],
+		aiInsights?: string | null,
+	) {
 		if (!currentEntry()) return;
 
 		try {
@@ -95,16 +131,38 @@ export function useJournal() {
 			const now = Date.now();
 
 			await db.execute(
-				"UPDATE notes SET modified_at = ?, properties = ? WHERE id = ?",
-				[now, JSON.stringify(metadata), currentEntry()!.id],
+				"UPDATE notes SET modified_at = $1, properties = $2, tags = $3, ai_insights = $4 WHERE id = $5",
+				[
+					now,
+					JSON.stringify(metadata.properties || {}),
+					JSON.stringify(metadata.tags || []),
+					aiInsights ?? null,
+					currentEntry()!.id,
+				],
 			);
 
 			const updatedEntryResult = await db.select<Note[]>(
-				"SELECT * FROM notes WHERE id = ?",
+				"SELECT * FROM notes WHERE id = $1",
 				[currentEntry()!.id],
 			);
 
 			const updatedEntry = updatedEntryResult[0];
+
+			// Parse tags back into an array
+			if (updatedEntry) {
+				try {
+					// Check if tags is a JSON string or already an object
+					const parsedTags = updatedEntry.metadata.properties?.tags || [];
+					updatedEntry.metadata.properties = {
+						...updatedEntry.metadata.properties,
+						tags: Array.isArray(parsedTags) ? parsedTags : [],
+					};
+				} catch (parseError) {
+					console.error("Failed to parse tags:", parseError);
+					updatedEntry.metadata.tags = [];
+				}
+			}
+
 			setCurrentEntry(updatedEntry);
 		} catch (error) {
 			console.error("Failed to update metadata:", error);

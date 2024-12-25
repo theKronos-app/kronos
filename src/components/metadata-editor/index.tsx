@@ -14,7 +14,7 @@ interface MetadataEditorProps {
 }
 
 export default function MetadataEditor(props: MetadataEditorProps) {
-	const [tags, setTags] = createSignal(props.metadata?.tags || []);
+	const [tags, setTags] = createSignal(props.metadata?.properties?.tags || []);
 	const [newTag, setNewTag] = createSignal("");
 	const [properties, setProperties] = createSignal(
 		props.metadata?.properties || {},
@@ -30,7 +30,10 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 			setTags(updatedTags);
 			props.onChange({
 				...props.metadata,
-				tags: updatedTags,
+				properties: {
+					...props.metadata.properties,
+					tags: updatedTags,
+				},
 			});
 			setNewTag("");
 		}
@@ -41,7 +44,10 @@ export default function MetadataEditor(props: MetadataEditorProps) {
 		setTags(updatedTags);
 		props.onChange({
 			...props.metadata,
-			tags: updatedTags,
+			properties: {
+				...props.metadata.properties,
+				tags: updatedTags,
+			},
 		});
 	};
 

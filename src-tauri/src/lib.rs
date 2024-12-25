@@ -63,6 +63,12 @@ pub fn run() {
                 email TEXT
             )",
             kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 5,
+            description: "add ai_insights column to notes table",
+            sql: "ALTER TABLE notes ADD COLUMN ai_insights TEXT",
+            kind: MigrationKind::Up,
         }
     ];
 
