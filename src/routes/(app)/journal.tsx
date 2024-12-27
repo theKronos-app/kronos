@@ -15,8 +15,7 @@ export default function Journal(): JSX.Element {
 	// Initial load
 	onMount(async () => {
 		setIsLoading(true);
-		const today = format(new Date(), "yyyy-MM-dd");
-		await loadEntry(today);
+		await loadEntry(journalStore.currentDate);
 		setIsLoading(false);
 	});
 
