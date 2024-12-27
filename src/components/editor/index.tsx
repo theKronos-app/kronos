@@ -18,6 +18,7 @@ import { AutoFocusPlugin } from "lexical-solid/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "lexical-solid/LexicalComposer";
 import { RichTextPlugin } from "lexical-solid/LexicalRichTextPlugin";
 import { ContentEditable } from "lexical-solid/LexicalContentEditable";
+import { TabIndentationPlugin } from "lexical-solid/LexicalTabIndentationPlugin";
 import {
 	$convertFromMarkdownString,
 	$convertToMarkdownString,
@@ -199,6 +200,7 @@ export default function Editor(props: EditorProps) {
 					<OnChangePlugin onChange={onChange} />
 					<AutoFocusPlugin />
 					<LinkPlugin />
+					<TabIndentationPlugin />
 					<HistoryPlugin delay={300} />
 					<LexicalMarkdownShortcutPlugin transformers={DEFAULT_TRANSFORMERS} />
 				</div>
