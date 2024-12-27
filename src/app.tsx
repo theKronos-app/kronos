@@ -86,7 +86,7 @@ export const ThemeProvider: ParentComponent = (props) => {
 	if (typeof window !== "undefined") {
 		const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 		setIsDark(darkMode);
-		document.documentElement.classList.toggle("light", darkMode);
+		document.documentElement.classList.toggle("dark", darkMode);
 	}
 
 	return (
