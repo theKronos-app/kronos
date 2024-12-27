@@ -44,21 +44,21 @@ The editor is the most important feature in kronos, while I wish to focus on mor
 
 ### Core Plugins
 
-1. **RichTextPlugin**: The main plugin that enables rich text editing capabilities. It provides a content editable area where users can input and format text.
-2. **PlainTextPlugin**: An alternative to RichTextPlugin for plain text editing, without rich text formatting options.
-3. **HistoryPlugin**: Manages undo/redo functionality, allowing users to revert or reapply changes.
-4. **AutoFocusPlugin**: Automatically focuses the editor when it loads, so users can start typing immediately.
-5. **ClearEditorPlugin**: Provides functionality to clear the editor's content.
+- [x] **RichTextPlugin**: The main plugin that enables rich text editing capabilities. It provides a content editable area where users can input and format text.
+- [ ] **PlainTextPlugin**: An alternative to RichTextPlugin for plain text editing, without rich text formatting options.
+- [x] **HistoryPlugin**: Manages undo/redo functionality, allowing users to revert or reapply changes.
+- [x] **AutoFocusPlugin**: Automatically focuses the editor when it loads, so users can start typing immediately.
+- [ ] **ClearEditorPlugin**: Provides functionality to clear the editor's content.
 
 ### Formatting and Styling
 
-6. **MarkdownShortcutPlugin**: Converts Markdown syntax into rich text formatting (e.g., typing **bold** converts to bold text).
-7. **CodeHighlightPlugin**: Adds syntax highlighting for code blocks.
-8. **ListPlugin**: Enables bulleted and numbered lists.
-9. **CheckListPlugin**: Adds support for checklists (to-do lists).
-10. **HorizontalRulePlugin**: Allows users to insert horizontal lines.
-11. **TabIndentationPlugin**: Enables indentation using the Tab key.
-12. **FloatingTextFormatToolbarPlugin**: Displays a floating toolbar for text formatting options (e.g., bold, italic, underline).
+- [x] **MarkdownShortcutPlugin**: Converts Markdown syntax into rich text formatting (e.g., typing **bold** converts to bold text).
+- [ ] **CodeHighlightPlugin**: Adds syntax highlighting for code blocks.
+- [x] **ListPlugin**: Enables bulleted and numbered lists.
+- [ ] **CheckListPlugin**: Adds support for checklists (to-do lists).
+- [x] **HorizontalRulePlugin**: Allows users to insert horizontal lines.
+- [ ] **TabIndentationPlugin**: Enables indentation using the Tab key.
+- [ ] **FloatingTextFormatToolbarPlugin**: Displays a floating toolbar for text formatting options (e.g., bold, italic, underline).
 
 ### Collaboration and Real-Time Editing
 
