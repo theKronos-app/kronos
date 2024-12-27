@@ -57,7 +57,7 @@ export default function Journal(): JSX.Element {
 						{/* 		}} */}
 						{/* 	/> */}
 						{/* </div> */}
-						<div class="p-4 max-w-[900px]">
+						<div class="p-4 w-[80ch] mx-auto">
 							<Editor
 								noteId={currentEntry()!.id}
 								type="daily"
