@@ -83,7 +83,7 @@ The editor is the most important feature in kronos, while I wish to focus on mor
 - [x] **ListPlugin**: Enables bulleted and numbered lists.
 - [ ] **CheckListPlugin**: Adds support for checklists (to-do lists).
 - [x] **HorizontalRulePlugin**: Allows users to insert horizontal lines.
-- [ ] **TabIndentationPlugin**: Enables indentation using the Tab key.
+- [x] **TabIndentationPlugin**: Enables indentation using the Tab key.
 - [ ] **FloatingTextFormatToolbarPlugin**: Displays a floating toolbar for text formatting options (e.g., bold, italic, underline).
 
 ### Collaboration and Real-Time Editing
