@@ -1,21 +1,13 @@
-export type NoteType = "daily" | "weekly" | "document";
+export type NoteType = "daily" | "weekly" | "document" | "tag";
 
 export interface Note {
 	id: string;
 	content: string;
-
 	modified: Date;
 	created: Date;
-
 	type: NoteType;
-
 	tags: string[];
-	properties: {
-		// Daily-specific
-		mood?: string;
-		// Document-specific
-		status?: "active" | "archived";
-	};
+	linkedNotes?: string[]; // IDs of related notes
 	aiInsights: string | null;
 	path: string;
 }

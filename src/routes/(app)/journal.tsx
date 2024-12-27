@@ -44,11 +44,16 @@ export default function Journal(): JSX.Element {
 						{/* 		setCurrentEntry(updatedNote); */}
 						{/* 	}} */}
 						{/* /> */}
-						<div class="fixed top-20">
+						<div class="fixed top-20 w-64">
 							<MetadataEditor
 								note={currentEntry()!}
 								onChange={(note) => {
-									updateEntryMetadata(note);
+									// Handle tag updates and linked notes
+									updateEntryMetadata({
+										...note,
+										tags: note.tags,
+										linkedNotes: note.linkedNotes || []
+									});
 								}}
 							/>
 						</div>

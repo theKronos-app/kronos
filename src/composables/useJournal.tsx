@@ -42,13 +42,9 @@ export function useJournal() {
 				entry = existingEntry[0];
 
 				// Ensure metadata exists and is initialized
-				entry.metadata = entry.metadata || {
-					created: new Date(),
-					modified: new Date(),
-					type: "daily" as NoteType,
-					tags: [],
-					properties: {},
-				};
+				entry.type = entry.type || "daily";
+				entry.tags = entry.tags || [];
+				entry.linkedNotes = entry.linkedNotes || [];
 
 				// Robust properties parsing
 				try {
@@ -148,14 +144,10 @@ export function useJournal() {
 				);
 				entry = newEntryResult[0];
 
-				// Ensure metadata is initialized for new entries
-				entry.metadata = {
-					created: new Date(now),
-					modified: new Date(now),
-					type: "daily" as NoteType,
-					tags: [],
-					properties: {},
-				};
+				// Initialize new entry
+				entry.type = "daily";
+				entry.tags = [];
+				entry.linkedNotes = [];
 			}
 
 			// Update both the current entry and the store
