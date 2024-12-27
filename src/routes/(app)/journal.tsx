@@ -33,7 +33,7 @@ export default function Journal(): JSX.Element {
 		<div class="h-full w-full relative ">
 			<Show when={!isLoading()} fallback={<div>Loading...</div>}>
 				{currentEntry() ? (
-					<div class="flex gap-8">
+					<div class="flex gap-8 justify-center">
 						{/* <MetadataEditor */}
 						{/* 	metadata={currentEntry()!.metadata || {}} */}
 						{/* 	onChange={(metadata) => { */}
@@ -44,29 +44,28 @@ export default function Journal(): JSX.Element {
 						{/* 		setCurrentEntry(updatedNote); */}
 						{/* 	}} */}
 						{/* /> */}
-						<div class="fixed top-20 w-64">
-							<MetadataEditor
-								note={currentEntry()!}
-								onChange={(note) => {
-									// Handle tag updates and linked notes
-									updateEntryMetadata({
-										...note,
-										tags: note.tags,
-										linkedNotes: note.linkedNotes || []
-									});
-								}}
-							/>
-						</div>
-						<div class="flex-1"></div>
+						{/* <div class="fixed top-20 w-64"> */}
+						{/* 	<MetadataEditor */}
+						{/* 		note={currentEntry()!} */}
+						{/* 		onChange={(note) => { */}
+						{/* 			// Handle tag updates and linked notes */}
+						{/* 			updateEntryMetadata({ */}
+						{/* 				...note, */}
+						{/* 				tags: note.tags, */}
+						{/* 				linkedNotes: note.linkedNotes || [] */}
+						{/* 			}); */}
+						{/* 		}} */}
+						{/* 	/> */}
+						{/* </div> */}
 						<div class="p-4 max-w-[900px]">
 							<Editor
 								noteId={currentEntry()!.id}
-								type="daily" as NoteType
+								type="daily"
+								as
+								NoteType
 								onSave={(note) => setCurrentEntry(note)}
 							/>
 						</div>
-
-						<div class="flex-1"></div>
 					</div>
 				) : (
 					<div>Failed to load journal entry</div>
